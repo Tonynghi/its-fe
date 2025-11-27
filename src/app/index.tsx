@@ -1,7 +1,10 @@
 import { RouterProvider, createRouter } from '@tanstack/react-router';
 import { routeTree } from '../routeTree.gen';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { useUserStore } from '../stores';
+import { Role } from '../types';
+import { ToastContainer } from 'react-toastify';
 
-// Create a new router instance
 const router = createRouter({
   routeTree,
   context: {
@@ -9,7 +12,6 @@ const router = createRouter({
   },
 });
 
-// Register the router instance for type safety
 declare module '@tanstack/react-router' {
   interface Register {
     router: typeof router;
@@ -17,11 +19,30 @@ declare module '@tanstack/react-router' {
 }
 
 const AppRouter = () => {
-  return <RouterProvider router={router} />;
+  const { user } = useUserStore();
+
+  return (
+    <RouterProvider
+      router={router}
+      context={{
+        authContext: {
+          isAuthenticated: !!user,
+          isManager: user?.role === Role.TUTOR,
+        },
+      }}
+    />
+  );
 };
 
+const queryClient = new QueryClient();
+
 const App = () => {
-  return <AppRouter />;
+  return (
+    <QueryClientProvider client={queryClient}>
+      <AppRouter />
+      <ToastContainer />
+    </QueryClientProvider>
+  );
 };
 
 export default App;

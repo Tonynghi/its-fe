@@ -1,5 +1,5 @@
 import { createRootRouteWithContext, Outlet } from '@tanstack/react-router';
-import React, { Suspense } from 'react';
+import { Suspense } from 'react';
 
 type RouterContext = {
   authContext: { isAuthenticated: boolean; isManager: boolean };

@@ -1,4 +1,5 @@
 import { useForm } from '@tanstack/react-form';
+import { useMutation } from '@tanstack/react-query';
 import { createFileRoute } from '@tanstack/react-router';
 import {
   EyeClosedIcon,
@@ -7,6 +8,9 @@ import {
   MailIcon,
 } from 'lucide-react';
 import { useState } from 'react';
+import handleAxiosError from '../../helpers/handle-axios-error';
+import { toast } from 'react-toastify';
+import { AuthService, type SignInRequest } from '../../services/auth';
 
 export const Route = createFileRoute('/sign-in/')({
   component: RouteComponent,
@@ -14,13 +18,26 @@ export const Route = createFileRoute('/sign-in/')({
 
 function RouteComponent() {
   const [showPassword, setShowPassword] = useState(false);
+
+  const { isPending, mutateAsync } = useMutation({
+    mutationFn: ({ email, password }: SignInRequest) => {
+      return AuthService.signIn({ email, password });
+    },
+    onSuccess: ({ data }) => {
+      localStorage.setItem('token', data.accessToken);
+    },
+    onError: (error) => {
+      handleAxiosError(error, (message) => toast.error(message));
+    },
+  });
+
   const form = useForm({
     defaultValues: {
       email: '',
       password: '',
     },
     onSubmit: async ({ value }) => {
-      console.log(value);
+      await mutateAsync(value);
     },
   });
 
@@ -47,6 +64,9 @@ function RouteComponent() {
               <div className="border border-tertiary px-4 py-2 rounded-lg flex flex-row gap-4 items-center">
                 <MailIcon />
                 <input
+                  value={field.state.value}
+                  onBlur={field.handleBlur}
+                  onChange={(e) => field.handleChange(e.target.value)}
                   id={field.name}
                   name={field.name}
                   type="email"
@@ -64,6 +84,9 @@ function RouteComponent() {
                 <input
                   id={field.name}
                   name={field.name}
+                  value={field.state.value}
+                  onBlur={field.handleBlur}
+                  onChange={(e) => field.handleChange(e.target.value)}
                   type={showPassword ? 'text' : 'password'}
                   placeholder="Enter your password..."
                   className="outline-none w-full"
@@ -86,6 +109,7 @@ function RouteComponent() {
           ></form.Field>
 
           <button
+            disabled={isPending}
             type="submit"
             className="bg-primary px-4 py-2 w-full font-bold text-white rounded-lg cursor-pointer hover:bg-primary-700 ease-in-out duration-200"
           >
