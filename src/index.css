@@ -1,0 +1,31 @@
+@import 'tailwindcss';
+
+@theme {
+  --color-primary: #ff2c2c;
+  --color-primary-300: #ff9c9c;
+  --color-primary-700: #aa0000;
+  --color-tertiary: #3c3c3c;
+  --color-tertiary-300: #8f8f8f;
+  --color-tertiary-700: #010101;
+}
+
+:root {
+  font-family: 'Baloo Chettan 2', sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: #3c3c3c;
+  background-color: white;
+  font-size: 16px;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  min-width: 320px;
+  min-height: 100vh;
+}
