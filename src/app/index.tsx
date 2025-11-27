@@ -1,7 +1,7 @@
 import { RouterProvider, createRouter } from '@tanstack/react-router';
 import { routeTree } from '../routeTree.gen';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { useUserStore } from '../stores';
+import { useAuthStore, useUserStore } from '../stores';
 import { Role } from '../types';
 import { ToastContainer } from 'react-toastify';
 
@@ -19,6 +19,7 @@ declare module '@tanstack/react-router' {
 }
 
 const AppRouter = () => {
+  const { token } = useAuthStore();
   const { user } = useUserStore();
 
   return (
@@ -26,7 +27,7 @@ const AppRouter = () => {
       router={router}
       context={{
         authContext: {
-          isAuthenticated: !!user,
+          isAuthenticated: !!token,
           isManager: user?.role === Role.TUTOR,
         },
       }}

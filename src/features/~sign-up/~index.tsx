@@ -6,15 +6,17 @@ import {
   EyeIcon,
   LockKeyholeIcon,
   MailIcon,
+  UserIcon,
 } from 'lucide-react';
 import { useState } from 'react';
 import { handleAxiosError } from '../../helpers';
 import { toast } from 'react-toastify';
-import { AuthService, type SignInRequest } from '../../services';
+import { AuthService, type SignUpRequest } from '../../services';
+import { Role } from '../../types';
 import { useAuthStore } from '../../stores';
 import { z } from 'zod';
 
-export const Route = createFileRoute('/sign-in/')({
+export const Route = createFileRoute('/sign-up/')({
   validateSearch: (search) =>
     z
       .object({
@@ -36,8 +38,8 @@ function RouteComponent() {
   const { setToken } = useAuthStore();
 
   const { isPending, mutateAsync } = useMutation({
-    mutationFn: ({ email, password }: SignInRequest) => {
-      return AuthService.signIn({ email, password });
+    mutationFn: (request: SignUpRequest) => {
+      return AuthService.signUp(request);
     },
     onSuccess: ({ data }) => {
       setToken(data.accessToken);
@@ -51,23 +53,36 @@ function RouteComponent() {
 
   const form = useForm({
     defaultValues: {
+      name: '',
       email: '',
       password: '',
+      role: Role.STUDENT,
     },
     onSubmit: async ({ value }) => {
       await mutateAsync(value);
     },
   });
 
+  const roleOptions = [
+    {
+      label: 'Student',
+      value: Role.STUDENT,
+    },
+    {
+      label: 'Tutor',
+      value: Role.TUTOR,
+    },
+  ];
+
   return (
     <div className="w-dvw h-dvh flex flex-row justify-between gap-20 p-10">
       <img
-        src="sign-in-bg.jpg"
+        src="sign-up-bg.webp"
         className="h-full relative w-120 object-cover rounded-lg"
       />
       <div className="flex flex-col h-full justify-center gap-4 items-center w-120 mr-40">
-        <h1 className="font-bold text-2xl">Sign in</h1>
-        <div>Sign in now to start your journey</div>
+        <h1 className="font-bold text-2xl">Sign up</h1>
+        <div>Create an account and begin your study now</div>
         <form
           onSubmit={(e) => {
             e.preventDefault();
@@ -76,6 +91,24 @@ function RouteComponent() {
           }}
           className="flex flex-col w-full gap-4"
         >
+          <form.Field
+            name="name"
+            children={(field) => (
+              <div className="border border-tertiary px-4 py-2 rounded-lg flex flex-row gap-4 items-center">
+                <UserIcon />
+                <input
+                  value={field.state.value}
+                  onBlur={field.handleBlur}
+                  onChange={(e) => field.handleChange(e.target.value)}
+                  id={field.name}
+                  name={field.name}
+                  type="text"
+                  placeholder="Enter your name..."
+                  className="outline-none w-full"
+                />
+              </div>
+            )}
+          />
           <form.Field
             name="email"
             children={(field) => (
@@ -93,7 +126,7 @@ function RouteComponent() {
                 />
               </div>
             )}
-          ></form.Field>
+          />
           <form.Field
             name="password"
             children={(field) => (
@@ -124,21 +157,42 @@ function RouteComponent() {
                 </button>
               </div>
             )}
-          ></form.Field>
-
+          />
+          <form.Field
+            name="role"
+            children={(field) => (
+              <div className="flex flex-row gap-4 items-center">
+                <label className="font-bold">Role:</label>
+                <select
+                  value={field.state.value}
+                  onBlur={field.handleBlur}
+                  onChange={(e) => field.handleChange(e.target.value as Role)}
+                  id={field.name}
+                  name={field.name}
+                  className="border w-full border-tertiary px-4 py-2 rounded-lg flex flex-row gap-4 items-center appearance-none focus:border-primary focus:ring-primary"
+                >
+                  {roleOptions.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
+          />
           <button
             disabled={isPending}
             type="submit"
             className="bg-primary px-4 py-2 w-full font-bold text-white rounded-lg cursor-pointer hover:bg-primary-700 ease-in-out duration-200"
           >
-            Sign in
+            Sign up
           </button>
           <div className="text-center">
-            Don't have an account yet? Sign up{' '}
+            Already have an account? Sign in{' '}
             <button
               type="button"
               onClick={() => {
-                navigate({ to: '/sign-up' });
+                navigate({ to: '/sign-in' });
               }}
               className="text-primary hover:text-primary-700 underline ease-in-out duration-200 cursor-pointer"
             >

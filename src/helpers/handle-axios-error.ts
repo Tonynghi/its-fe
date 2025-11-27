@@ -2,7 +2,7 @@ import { AxiosError } from 'axios';
 
 const defaultMessage = 'Something went wrong. Please try again.';
 
-const handleAxiosError = (
+export const handleAxiosError = (
   error: unknown,
   cb: (message: string, error?: unknown) => void,
 ) => {
@@ -30,5 +30,3 @@ const handleAxiosError = (
     cb(defaultMessage, error);
   }
 };
-
-export default handleAxiosError;

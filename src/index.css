@@ -9,6 +9,18 @@
   --color-tertiary-700: #010101;
 }
 
+@layer utilities {
+  /* Chrome, Safari, Edge, and Opera */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Firefox */
+  .no-scrollbar {
+    scrollbar-width: none;
+  }
+}
+
 :root {
   font-family: 'Baloo Chettan 2', sans-serif;
   line-height: 1.5;
