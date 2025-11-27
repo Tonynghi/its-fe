@@ -1,9 +1,11 @@
 import { useQuery } from '@tanstack/react-query';
 import { createFileRoute } from '@tanstack/react-router';
-import { SearchIcon } from 'lucide-react';
+import { PlusIcon, SearchIcon } from 'lucide-react';
 import { useState } from 'react';
 import { LearningContentsService, SubjectsService } from '../../../services';
 import ContentItemCard from './content-item-card';
+import { useUserStore } from '../../../stores';
+import { Role } from '../../../types';
 
 export const Route = createFileRoute('/_layout/learning-contents/')({
   component: RouteComponent,
@@ -12,6 +14,7 @@ export const Route = createFileRoute('/_layout/learning-contents/')({
 function RouteComponent() {
   const [search, setSearch] = useState('');
   const [subjectId, setSubjectId] = useState('');
+  const { user } = useUserStore();
 
   const { data: subjectData } = useQuery({
     queryKey: [],
@@ -34,7 +37,19 @@ function RouteComponent() {
 
   return (
     <div className="flex flex-col w-full gap-6">
-      <h1 className="font-bold text-2xl">Learning Contents</h1>
+      <div className="flex flex-row justify-between">
+        <h1 className="font-bold text-2xl">Learning Contents</h1>
+        {user?.role === Role.TUTOR && (
+          <button
+            type="button"
+            onClick={() => {}}
+            className="bg-primary px-4 py-2 font-bold text-white rounded-lg cursor-pointer hover:bg-primary-700 ease-in-out duration-200 flex flex-row gap-4"
+          >
+            <PlusIcon />
+            <span>Upload new content</span>
+          </button>
+        )}
+      </div>
       <div className="flex flex-row w-full gap-6">
         <div className="border w-full border-tertiary px-4 py-2 rounded-lg flex flex-row gap-4 items-center">
           <SearchIcon />

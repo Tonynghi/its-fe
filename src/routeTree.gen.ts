@@ -13,7 +13,10 @@ import { Route as LayoutRouteImport } from './features/~_layout'
 import { Route as IndexRouteImport } from './features/~index'
 import { Route as SignUpIndexRouteImport } from './features/~sign-up/~index'
 import { Route as SignInIndexRouteImport } from './features/~sign-in/~index'
+import { Route as LayoutManageContentsIndexRouteImport } from './features/~_layout/~manage-contents/~index'
 import { Route as LayoutLearningContentsIndexRouteImport } from './features/~_layout/~learning-contents/~index'
+import { Route as LayoutCreateTopicIndexRouteImport } from './features/~_layout/~create-topic/~index'
+import { Route as LayoutCreateSubjectIndexRouteImport } from './features/~_layout/~create-subject/~index'
 
 const LayoutRoute = LayoutRouteImport.update({
   id: '/_layout',
@@ -34,10 +37,27 @@ const SignInIndexRoute = SignInIndexRouteImport.update({
   path: '/sign-in/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LayoutManageContentsIndexRoute =
+  LayoutManageContentsIndexRouteImport.update({
+    id: '/manage-contents/',
+    path: '/manage-contents/',
+    getParentRoute: () => LayoutRoute,
+  } as any)
 const LayoutLearningContentsIndexRoute =
   LayoutLearningContentsIndexRouteImport.update({
     id: '/learning-contents/',
     path: '/learning-contents/',
+    getParentRoute: () => LayoutRoute,
+  } as any)
+const LayoutCreateTopicIndexRoute = LayoutCreateTopicIndexRouteImport.update({
+  id: '/create-topic/',
+  path: '/create-topic/',
+  getParentRoute: () => LayoutRoute,
+} as any)
+const LayoutCreateSubjectIndexRoute =
+  LayoutCreateSubjectIndexRouteImport.update({
+    id: '/create-subject/',
+    path: '/create-subject/',
     getParentRoute: () => LayoutRoute,
   } as any)
 
@@ -45,13 +65,19 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/sign-in': typeof SignInIndexRoute
   '/sign-up': typeof SignUpIndexRoute
+  '/create-subject': typeof LayoutCreateSubjectIndexRoute
+  '/create-topic': typeof LayoutCreateTopicIndexRoute
   '/learning-contents': typeof LayoutLearningContentsIndexRoute
+  '/manage-contents': typeof LayoutManageContentsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/sign-in': typeof SignInIndexRoute
   '/sign-up': typeof SignUpIndexRoute
+  '/create-subject': typeof LayoutCreateSubjectIndexRoute
+  '/create-topic': typeof LayoutCreateTopicIndexRoute
   '/learning-contents': typeof LayoutLearningContentsIndexRoute
+  '/manage-contents': typeof LayoutManageContentsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -59,20 +85,40 @@ export interface FileRoutesById {
   '/_layout': typeof LayoutRouteWithChildren
   '/sign-in/': typeof SignInIndexRoute
   '/sign-up/': typeof SignUpIndexRoute
+  '/_layout/create-subject/': typeof LayoutCreateSubjectIndexRoute
+  '/_layout/create-topic/': typeof LayoutCreateTopicIndexRoute
   '/_layout/learning-contents/': typeof LayoutLearningContentsIndexRoute
+  '/_layout/manage-contents/': typeof LayoutManageContentsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/sign-in' | '/sign-up' | '/learning-contents'
+  fullPaths:
+    | '/'
+    | '/sign-in'
+    | '/sign-up'
+    | '/create-subject'
+    | '/create-topic'
+    | '/learning-contents'
+    | '/manage-contents'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/sign-in' | '/sign-up' | '/learning-contents'
+  to:
+    | '/'
+    | '/sign-in'
+    | '/sign-up'
+    | '/create-subject'
+    | '/create-topic'
+    | '/learning-contents'
+    | '/manage-contents'
   id:
     | '__root__'
     | '/'
     | '/_layout'
     | '/sign-in/'
     | '/sign-up/'
+    | '/_layout/create-subject/'
+    | '/_layout/create-topic/'
     | '/_layout/learning-contents/'
+    | '/_layout/manage-contents/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -112,6 +158,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SignInIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_layout/manage-contents/': {
+      id: '/_layout/manage-contents/'
+      path: '/manage-contents'
+      fullPath: '/manage-contents'
+      preLoaderRoute: typeof LayoutManageContentsIndexRouteImport
+      parentRoute: typeof LayoutRoute
+    }
     '/_layout/learning-contents/': {
       id: '/_layout/learning-contents/'
       path: '/learning-contents'
@@ -119,15 +172,35 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LayoutLearningContentsIndexRouteImport
       parentRoute: typeof LayoutRoute
     }
+    '/_layout/create-topic/': {
+      id: '/_layout/create-topic/'
+      path: '/create-topic'
+      fullPath: '/create-topic'
+      preLoaderRoute: typeof LayoutCreateTopicIndexRouteImport
+      parentRoute: typeof LayoutRoute
+    }
+    '/_layout/create-subject/': {
+      id: '/_layout/create-subject/'
+      path: '/create-subject'
+      fullPath: '/create-subject'
+      preLoaderRoute: typeof LayoutCreateSubjectIndexRouteImport
+      parentRoute: typeof LayoutRoute
+    }
   }
 }
 
 interface LayoutRouteChildren {
+  LayoutCreateSubjectIndexRoute: typeof LayoutCreateSubjectIndexRoute
+  LayoutCreateTopicIndexRoute: typeof LayoutCreateTopicIndexRoute
   LayoutLearningContentsIndexRoute: typeof LayoutLearningContentsIndexRoute
+  LayoutManageContentsIndexRoute: typeof LayoutManageContentsIndexRoute
 }
 
 const LayoutRouteChildren: LayoutRouteChildren = {
+  LayoutCreateSubjectIndexRoute: LayoutCreateSubjectIndexRoute,
+  LayoutCreateTopicIndexRoute: LayoutCreateTopicIndexRoute,
   LayoutLearningContentsIndexRoute: LayoutLearningContentsIndexRoute,
+  LayoutManageContentsIndexRoute: LayoutManageContentsIndexRoute,
 }
 
 const LayoutRouteWithChildren =

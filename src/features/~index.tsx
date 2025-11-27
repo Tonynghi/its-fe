@@ -1,4 +1,4 @@
-import { createFileRoute } from '@tanstack/react-router';
+import { createFileRoute, useNavigate } from '@tanstack/react-router';
 import { Header } from './components';
 
 export const Route = createFileRoute('/')({
@@ -6,6 +6,8 @@ export const Route = createFileRoute('/')({
 });
 
 function RouteComponent() {
+  const navigate = useNavigate();
+
   return (
     <div className="w-dvw h-dvh flex flex-col">
       <Header />
@@ -24,7 +26,10 @@ function RouteComponent() {
               lesson to your needs—helping you improve faster and more
               confidently.
             </div>
-            <button className="bg-primary px-4 py-2 w-fit font-bold text-white rounded-lg cursor-pointer hover:bg-primary-700 ease-in-out duration-200">
+            <button
+              onClick={() => navigate({ to: '/sign-in' })}
+              className="bg-primary px-4 py-2 w-fit font-bold text-white rounded-lg cursor-pointer hover:bg-primary-700 ease-in-out duration-200"
+            >
               Start your journey now
             </button>
           </div>
