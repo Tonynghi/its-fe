@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { createFileRoute } from '@tanstack/react-router';
+import { createFileRoute, useNavigate } from '@tanstack/react-router';
 import { PlusIcon, SearchIcon } from 'lucide-react';
 import { useState } from 'react';
 import { LearningContentsService, SubjectsService } from '../../../services';
@@ -12,6 +12,8 @@ export const Route = createFileRoute('/_layout/learning-contents/')({
 });
 
 function RouteComponent() {
+  const navigate = useNavigate();
+
   const [search, setSearch] = useState('');
   const [subjectId, setSubjectId] = useState('');
   const { user } = useUserStore();
@@ -42,7 +44,9 @@ function RouteComponent() {
         {user?.role === Role.TUTOR && (
           <button
             type="button"
-            onClick={() => {}}
+            onClick={() => {
+              navigate({ to: '/create-content' });
+            }}
             className="bg-primary px-4 py-2 font-bold text-white rounded-lg cursor-pointer hover:bg-primary-700 ease-in-out duration-200 flex flex-row gap-4"
           >
             <PlusIcon />

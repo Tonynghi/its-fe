@@ -1,8 +1,11 @@
 import { useQuery } from '@tanstack/react-query';
 import { TopicsService } from '../../../services';
 import { PlusIcon } from 'lucide-react';
+import { useNavigate } from '@tanstack/react-router';
 
 const TopicsSection = () => {
+  const navigate = useNavigate();
+
   const { data, isPending } = useQuery({
     queryKey: ['topics'],
     queryFn: () => {
@@ -21,7 +24,9 @@ const TopicsSection = () => {
         </div>
         <button
           type="button"
-          onClick={() => {}}
+          onClick={() => {
+            navigate({ to: '/create-topic' });
+          }}
           className="bg-primary px-4 py-2 font-bold text-white rounded-lg cursor-pointer hover:bg-primary-700 ease-in-out duration-200 flex flex-row gap-2"
         >
           <PlusIcon />

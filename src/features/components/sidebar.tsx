@@ -1,14 +1,16 @@
 import { useNavigate, useRouter } from '@tanstack/react-router';
 import { useState, type ReactElement } from 'react';
 import classNames from 'classnames';
-import { BookOpenTextIcon, FolderKanbanIcon } from 'lucide-react';
-import { useUserStore } from '../../stores';
+import { BookOpenTextIcon, FolderKanbanIcon, LogOutIcon } from 'lucide-react';
+import { useAuthStore, useUserStore } from '../../stores';
 import { Role } from '../../types';
 
 const Sidebar = () => {
   const pathname = useRouter().state.location.pathname;
   const navigate = useNavigate();
   const [currentPathname, setCurrentPathname] = useState(pathname);
+  const { setUser } = useUserStore();
+  const { setToken } = useAuthStore();
 
   const items = [
     {
@@ -28,19 +30,31 @@ const Sidebar = () => {
   };
 
   return (
-    <div className="relative  flex p-4 flex-col gap-4 bg-white shadow-lg rounded-lg">
-      <div className="font-bold text-white rounded-sm flex items-center justify-center aspect-square w-8 bg-primary">
-        ITS
+    <div className="relative flex p-4 justify-between flex-col gap-4 bg-white shadow-lg rounded-lg">
+      <div className="relative flex flex-col gap-4">
+        <div className="font-bold text-white rounded-sm flex items-center justify-center aspect-square w-8 bg-primary">
+          ITS
+        </div>
+        {items.map((item) => (
+          <SidebarItem
+            currentPathname={currentPathname}
+            updatePath={updatePath}
+            key={item.pathname}
+            pathname={item.pathname}
+            icon={item.icon}
+          />
+        ))}
       </div>
-      {items.map((item) => (
-        <SidebarItem
-          currentPathname={currentPathname}
-          updatePath={updatePath}
-          key={item.pathname}
-          pathname={item.pathname}
-          icon={item.icon}
-        />
-      ))}
+      <button
+        onClick={() => {
+          setUser(undefined);
+          setToken(undefined);
+          navigate({ to: '/' });
+        }}
+        className="text-primary aspect-square w-full border-primary border flex items-center justify-center font-bold bg-none rounded-lg cursor-pointer hover:bg-primary hover:text-white ease-in-out duration-200"
+      >
+        <LogOutIcon size={20} />
+      </button>
     </div>
   );
 };

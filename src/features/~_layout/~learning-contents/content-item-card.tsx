@@ -31,7 +31,7 @@ const ContentItemCard = ({ content }: ContentItemCardProps) => {
           {content.subject.name}
         </div>
         <div className="font-bold text-lg">{content.name}</div>
-        <div>{content.description}</div>
+        <div className="line-clamp-3">{content.description}</div>
         {content.topics.length > 0 && (
           <div className="flex flex-row flex-wrap gap-2">
             {content.topics.map((topic) => {
@@ -48,7 +48,9 @@ const ContentItemCard = ({ content }: ContentItemCardProps) => {
         onClick={() => downloadContent()}
         className="w-full h-fit p-2 flex bg-tertiary hover:bg-tertiary-700 ease-in-out duration-200 text-white cursor-pointer items-center rounded-lg mt-6 justify-between"
       >
-        <span>{content.objectName.split('/').pop()}</span>
+        <span className="max-w-44 truncate">
+          {content.objectName.split('/').pop()}
+        </span>
         <DownloadIcon size={20} />
       </button>
     </div>
